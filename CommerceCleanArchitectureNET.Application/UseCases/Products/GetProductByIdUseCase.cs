@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CommerceCleanArchitectureNET.Application.UseCases.Products
 {
-    internal class GetProductByIdUseCase : IGetProductByIdUseCase
+    public class GetProductByIdUseCase : IGetProductByIdUseCase
     {
         private readonly IProductRepository _repository;
 
