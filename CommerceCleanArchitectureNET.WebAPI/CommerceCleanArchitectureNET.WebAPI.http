@@ -1,0 +1,6 @@
+@CommerceCleanArchitectureNET.WebAPI_HostAddress = http://localhost:5257
+
+GET {{CommerceCleanArchitectureNET.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
