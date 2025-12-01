@@ -1,4 +1,8 @@
-using CommerceCleanArchitectureNET.Application.UseCases.Products;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.CreateProduct;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.DeleteProduct;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProducts;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.GetProductById;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.UpdateProduct;
 using CommerceCleanArchitectureNET.Infrastructure;
 using CommerceCleanArchitectureNET.WebAPI.Middleware;
 using Microsoft.OpenApi.Models;
@@ -41,6 +45,9 @@ builder.Services.AddSwaggerGen(options =>
 // Application Layer
 builder.Services.AddScoped<ICreateProductUseCase, CreateProductUseCase>();
 builder.Services.AddScoped<IGetProductByIdUseCase, GetProductByIdUseCase>();
+builder.Services.AddScoped<IGetAllProductsUseCase, GetAllProductsUseCase>();
+builder.Services.AddScoped<IUpdateProductUseCase, UpdateProductUseCase>();
+builder.Services.AddScoped<IDeleteProductUseCase, DeleteProductUseCase>();
 
 // Infrastructure Layer
 builder.Services.AddInfrastructure(builder.Configuration);
