@@ -1,5 +1,6 @@
 ﻿using CommerceCleanArchitectureNET.Application.DTOs;
 using CommerceCleanArchitectureNET.Application.UseCases.Products;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.UpdateProduct;
 using CommerceCleanArchitectureNET.WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,18 +13,37 @@ namespace CommerceCleanArchitectureNET.WebAPI.Controllers
     //[Authorize]
     public class ProductsController : ControllerBase
     {
+        private readonly IGetAllProductsUseCase _getAllProducts;
         private readonly ICreateProductUseCase _createProduct;
         private readonly IGetProductByIdUseCase _getProductById;
         private readonly IUpdateProductUseCase _updateProduct;
 
         public ProductsController(
+            IGetAllProductsUseCase getAllProducts,
             ICreateProductUseCase createProduct,
             IGetProductByIdUseCase getProductById,
             IUpdateProductUseCase updateProductStock)
         {
+            _getAllProducts = getAllProducts;
             _createProduct = createProduct;
             _getProductById = getProductById;
             _updateProduct = updateProductStock;
+        }
+
+        /// <summary>
+        /// Get all products
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ProductDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAllProducts(CancellationToken ct)
+        {
+            var result = await _getAllProducts.ExecuteAsync(ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(new ErrorResponse(result.Error!));
+
+            return Ok(result.Value);
         }
 
         /// <summary>
