@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace CommerceCleanArchitectureNET.Application.DTOs
 {
-    public record UpdateProductStockDto(
-        Guid ProductId,
+    public record UpdateProductDto(
         int Stock
     );
 }

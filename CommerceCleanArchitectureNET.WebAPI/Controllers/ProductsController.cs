@@ -1,5 +1,6 @@
 ﻿using CommerceCleanArchitectureNET.Application.DTOs;
 using CommerceCleanArchitectureNET.Application.UseCases.Products;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.UpdateProduct;
 using CommerceCleanArchitectureNET.WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,16 @@ namespace CommerceCleanArchitectureNET.WebAPI.Controllers
     {
         private readonly ICreateProductUseCase _createProduct;
         private readonly IGetProductByIdUseCase _getProductById;
+        private readonly IUpdateProductUseCase _updateProduct;
 
         public ProductsController(
             ICreateProductUseCase createProduct,
-            IGetProductByIdUseCase getProductById)
+            IGetProductByIdUseCase getProductById,
+            IUpdateProductUseCase updateProductStock)
         {
             _createProduct = createProduct;
             _getProductById = getProductById;
+            _updateProduct = updateProductStock;
         }
 
         /// <summary>
@@ -55,6 +59,31 @@ namespace CommerceCleanArchitectureNET.WebAPI.Controllers
 
             if (!result.IsSuccess)
                 return NotFound(new ErrorResponse(result.Error!));
+
+            return Ok(result.Value);
+        }
+
+        /// <summary>
+        /// Update product stock
+        /// </summary>
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateProductStock(
+            Guid id,
+            [FromBody] UpdateProductDto dto,
+            CancellationToken ct)
+        {
+            var result = await _updateProduct.ExecuteAsync(id, dto, ct);
+
+            if (!result.IsSuccess)
+            {
+                if (result.Error!.Contains("not found"))
+                    return NotFound(new ErrorResponse(result.Error));
+
+                return BadRequest(new ErrorResponse(result.Error));
+            }
 
             return Ok(result.Value);
         }
