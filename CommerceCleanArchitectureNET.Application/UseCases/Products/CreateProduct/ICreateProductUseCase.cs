@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommerceCleanArchitectureNET.Application.UseCases.Products
+namespace CommerceCleanArchitectureNET.Application.UseCases.Products.CreateProduct
 {
     public interface ICreateProductUseCase
     {

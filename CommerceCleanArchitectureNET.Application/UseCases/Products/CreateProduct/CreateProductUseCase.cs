@@ -11,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommerceCleanArchitectureNET.Application.UseCases.Products
+namespace CommerceCleanArchitectureNET.Application.UseCases.Products.CreateProduct
 {
-    public class CreateProductUseCase : ICreateProductUseCase
+    public class CreateProductUseCase
     {
         private readonly IProductRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
