@@ -1,8 +1,8 @@
 ﻿using CommerceCleanArchitectureNET.Application.DTOs;
-using CommerceCleanArchitectureNET.Application.UseCases.Products;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.CreateProduct;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.DeleteProduct;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProducts;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.GetProductById;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.UpdateProduct;
 using CommerceCleanArchitectureNET.WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
