@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CommerceCleanArchitectureNET.Application.UseCases.Products.CreateProduct
 {
-    public class CreateProductUseCase
+    public class CreateProductUseCase : ICreateProductUseCase
     {
         private readonly IProductRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
