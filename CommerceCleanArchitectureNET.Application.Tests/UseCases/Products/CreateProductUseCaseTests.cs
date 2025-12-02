@@ -1,6 +1,6 @@
 ﻿using CommerceCleanArchitectureNET.Application.DTOs;
 using CommerceCleanArchitectureNET.Application.Interfaces;
-using CommerceCleanArchitectureNET.Application.UseCases.Products;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.CreateProduct;
 using CommerceCleanArchitectureNET.Domain.Entities;
 using CommerceCleanArchitectureNET.Domain.Repositories;
 using Moq;

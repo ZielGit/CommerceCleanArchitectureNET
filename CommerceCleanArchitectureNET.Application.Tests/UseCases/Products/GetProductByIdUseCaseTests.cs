@@ -1,4 +1,4 @@
-﻿using CommerceCleanArchitectureNET.Application.UseCases.Products;
+﻿using CommerceCleanArchitectureNET.Application.UseCases.Products.GetProductById;
 using CommerceCleanArchitectureNET.Domain.Entities;
 using CommerceCleanArchitectureNET.Domain.Repositories;
 using CommerceCleanArchitectureNET.Domain.ValueObjects;
