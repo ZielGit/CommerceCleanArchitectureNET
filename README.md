@@ -19,6 +19,7 @@ Este proyecto es una plantilla educativa que demuestra las mejores prácticas de
 - [Configuración](#-configuración)
 - [Ejecución](#-ejecución)
 - [Testing](#-testing)
+- [API Endpoints](#-api-endpoints)
 - [Principios Aplicados](#-principios-aplicados)
 - [Patrones de Diseño](#-patrones-de-diseño)
 - [Licencia](#-licencia)
@@ -101,12 +102,8 @@ CommerceCleanArchitectureNET/
 │   │       └── DomainException.cs      # Excepciones de negocio
 │   │
 │   ├── Application/                     # Capa de Aplicación
-│   │   ├── UseCases/
-│   │   │   └── Products/
-│   │   │       ├── CreateProductUseCase.cs
-│   │   │       └── GetProductByIdUseCase.cs
-│   │   ├── DTOs/
-│   │   │   └── ProductDto.cs           # Data Transfer Objects
+│   │   ├── UseCases/                   # Casos de Uso
+│   │   ├── DTOs/                       # Data Transfer Objects
 │   │   ├── Interfaces/
 │   │   │   └── IUnitOfWork.cs          # Patrón Unit of Work
 │   │   └── Common/
@@ -126,12 +123,12 @@ CommerceCleanArchitectureNET/
 │   │
 │   └── WebAPI/                          # Capa de Presentación
 │       ├── Controllers/
-│       │   └── ProductsController.cs    # API REST
+│       │   └── ProductsController.cs   # API REST
 │       ├── Middleware/
 │       │   └── ErrorHandlingMiddleware.cs
 │       ├── Models/
 │       │   └── ErrorResponse.cs
-│       ├── Program.cs                   # Punto de entrada
+│       ├── Program.cs                  # Punto de entrada
 │       └── appsettings.json            # Configuración
 │
 └── tests/
@@ -143,8 +140,6 @@ CommerceCleanArchitectureNET/
     │
     ├── Application.Tests/               # Tests de aplicación
     │   └── UseCases/
-    │       ├── CreateProductUseCaseTests.cs
-    │       └── GetProductByIdUseCaseTests.cs
     │
     └── Infrastructure.Tests/            # Tests de infraestructura
         └── Repositories/
@@ -269,6 +264,18 @@ dotnet test tests/CommerceCleanArchitectureNET.Infrastructure.Tests
 dotnet test --filter "FullyQualifiedName~ProductTests"
 ```
 
+## 📡 API Endpoints
+
+### Products
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `POST` | `/api/products` | Crear producto |
+| `GET` | `/api/products/{id}` | Obtener producto por ID |
+| `GET` | `/api/products` | Listar todos los productos |
+| `PUT` | `/api/products/{id}` | Actualizar stock del producto |
+| `DELETE` | `/api/products/{id}` | Eliminar producto |
+
 ## 🎯 Principios Aplicados
 
 ### SOLID
@@ -342,7 +349,7 @@ Dependencia de abstracciones, no de concreciones:
 
 ## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE.md) para más detalles.
 
 ## 👤 Autor
 
