@@ -96,6 +96,7 @@ CommerceCleanArchitectureNET/
 │   │   │   └── Money.cs                # Value Object inmutable
 │   │   ├── Repositories/
 │   │   │   └── IProductRepository.cs   # Contrato del repositorio
+│   │   ├── Specifications/             # Patrón Specification
 │   │   ├── Common/
 │   │   │   └── BaseEntity.cs           # Clase base
 │   │   └── Exceptions/
@@ -135,6 +136,7 @@ CommerceCleanArchitectureNET/
     ├── Domain.Tests/                    # Tests de dominio
     │   ├── Entities/
     │   │   └── ProductTests.cs
+    │   ├── Specifications/
     │   └── ValueObjects/
     │       └── MoneyTests.cs
     │
@@ -273,6 +275,7 @@ dotnet test --filter "FullyQualifiedName~ProductTests"
 | `POST` | `/api/products` | Crear producto |
 | `GET` | `/api/products/{id}` | Obtener producto por ID |
 | `GET` | `/api/products` | Listar todos los productos |
+| `GET` | `/api/products/search` | Buscar productos con filtros (Specification Pattern) |
 | `PUT` | `/api/products/{id}` | Actualizar stock del producto |
 | `DELETE` | `/api/products/{id}` | Eliminar producto |
 
@@ -323,6 +326,7 @@ Dependencia de abstracciones, no de concreciones:
 - ✅ **Aggregates** - Consistencia de datos
 - ✅ **Domain Events** - Comunicación entre agregados
 - ✅ **Repositories** - Abstracción de persistencia
+- ✅ **Specifications** - Reglas de negocio encapsuladas y reutilizables
 
 ## 🎨 Patrones de Diseño
 
@@ -333,7 +337,38 @@ Dependencia de abstracciones, no de concreciones:
 | **Dependency Injection** | Toda la aplicación | Inversión de control |
 | **Result** | `Application/Common` | Manejo de errores funcional |
 | **Factory** | `Domain/Entities` | Creación de objetos complejos |
-| **Specification** | `Domain/Specifications` | Encapsula lógica de consultas |
+| **Specification** | `Domain/Specifications` | Encapsula lógica de consultas y reglas de negocio |
+
+### Patrón Specification en Detalle
+
+El patrón Specification permite encapsular reglas de negocio reutilizables y combinarlas de forma flexible:
+
+```csharp
+// Crear especificaciones individuales
+var activeSpec = new ActiveProductsSpecification();
+var stockSpec = new ProductInStockSpecification();
+var priceSpec = new ProductByPriceRangeSpecification(100, 500);
+
+// Combinarlas con operadores lógicos
+var complexSpec = activeSpec
+    .And(stockSpec)
+    .And(priceSpec);
+
+// Usar en consultas
+var products = await repository.FindAsync(complexSpec);
+```
+
+**Especificaciones disponibles:**
+- `ActiveProductsSpecification` - Productos activos
+- `ProductInStockSpecification` - Productos con stock disponible
+- `ProductByPriceRangeSpecification` - Productos en rango de precio
+- `ProductByNameSpecification` - Búsqueda por nombre
+- `ProductByMinimumStockSpecification` - Stock mínimo requerido
+
+**Operadores de composición:**
+- `And()` - Combina especificaciones con lógica AND
+- `Or()` - Combina especificaciones con lógica OR
+- `Not()` - Niega una especificación
 
 ## 📚 Recursos Adicionales
 
