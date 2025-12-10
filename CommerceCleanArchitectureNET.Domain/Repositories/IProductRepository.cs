@@ -1,4 +1,5 @@
 ﻿using CommerceCleanArchitectureNET.Domain.Entities;
+using CommerceCleanArchitectureNET.Domain.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,12 @@ namespace CommerceCleanArchitectureNET.Domain.Repositories
         Task UpdateAsync(Product product, CancellationToken ct = default);
         Task DeleteAsync(Guid id, CancellationToken ct = default);
         Task<bool> ExistsAsync(Guid id, CancellationToken ct = default);
+
+        /// <summary>
+        /// Obtiene productos que satisfacen una especificación
+        /// </summary>
+        Task<IEnumerable<Product>> FindAsync(
+            ISpecification<Product> specification,
+            CancellationToken ct = default);
     }
 }
