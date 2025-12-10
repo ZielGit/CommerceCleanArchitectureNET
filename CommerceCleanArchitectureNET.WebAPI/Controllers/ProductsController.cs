@@ -3,6 +3,7 @@ using CommerceCleanArchitectureNET.Application.UseCases.Products.CreateProduct;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.DeleteProduct;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.GetProductById;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.SearchProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.UpdateProduct;
 using CommerceCleanArchitectureNET.WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -20,19 +21,22 @@ namespace CommerceCleanArchitectureNET.WebAPI.Controllers
         private readonly IGetProductByIdUseCase _getProductById;
         private readonly IUpdateProductUseCase _updateProduct;
         private readonly IDeleteProductUseCase _deleteProduct;
+        private readonly ISearchProductsUseCase _searchProducts;
 
         public ProductsController(
             IGetAllProductsUseCase getAllProducts,
             ICreateProductUseCase createProduct,
             IGetProductByIdUseCase getProductById,
             IUpdateProductUseCase updateProductStock,
-            IDeleteProductUseCase deleteProduct)
+            IDeleteProductUseCase deleteProduct,
+            ISearchProductsUseCase searchProducts)
         {
             _getAllProducts = getAllProducts;
             _createProduct = createProduct;
             _getProductById = getProductById;
             _updateProduct = updateProductStock;
             _deleteProduct = deleteProduct;
+            _searchProducts = searchProducts;
         }
 
         /// <summary>
@@ -133,6 +137,29 @@ namespace CommerceCleanArchitectureNET.WebAPI.Controllers
             }
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Search products with filters using Specification pattern
+        /// </summary>
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(IEnumerable<ProductDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SearchProducts(
+            [FromQuery] string? name,
+            [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice,
+            [FromQuery] bool? onlyInStock,
+            [FromQuery] bool? onlyActive,
+            CancellationToken ct)
+        {
+            var searchDto = new ProductSearchDto(name, minPrice, maxPrice, onlyInStock, onlyActive);
+            var result = await _searchProducts.ExecuteAsync(searchDto, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(new ErrorResponse(result.Error!));
+
+            return Ok(result.Value);
         }
     }
 }

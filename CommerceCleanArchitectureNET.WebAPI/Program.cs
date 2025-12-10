@@ -2,6 +2,7 @@ using CommerceCleanArchitectureNET.Application.UseCases.Products.CreateProduct;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.DeleteProduct;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.GetProductById;
+using CommerceCleanArchitectureNET.Application.UseCases.Products.SearchProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.UpdateProduct;
 using CommerceCleanArchitectureNET.Infrastructure;
 using CommerceCleanArchitectureNET.WebAPI.Middleware;
@@ -48,6 +49,7 @@ builder.Services.AddScoped<IGetProductByIdUseCase, GetProductByIdUseCase>();
 builder.Services.AddScoped<IGetAllProductsUseCase, GetAllProductsUseCase>();
 builder.Services.AddScoped<IUpdateProductUseCase, UpdateProductUseCase>();
 builder.Services.AddScoped<IDeleteProductUseCase, DeleteProductUseCase>();
+builder.Services.AddScoped<ISearchProductsUseCase, SearchProductsUseCase>();
 
 // Infrastructure Layer
 builder.Services.AddInfrastructure(builder.Configuration);
