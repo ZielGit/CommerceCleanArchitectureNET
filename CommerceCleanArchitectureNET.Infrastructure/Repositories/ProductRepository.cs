@@ -1,5 +1,6 @@
 ﻿using CommerceCleanArchitectureNET.Domain.Entities;
 using CommerceCleanArchitectureNET.Domain.Repositories;
+using CommerceCleanArchitectureNET.Domain.Specifications;
 using CommerceCleanArchitectureNET.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -58,6 +59,17 @@ namespace CommerceCleanArchitectureNET.Infrastructure.Repositories
         public async Task<bool> ExistsAsync(Guid id, CancellationToken ct = default)
         {
             return await _context.Products.AnyAsync(p => p.Id == id, ct);
+        }
+
+        public async Task<IEnumerable<Product>> FindAsync(
+            ISpecification<Product> specification,
+            CancellationToken ct = default)
+        {
+            var allProducts = await _context.Products
+                .AsNoTracking()
+                .ToListAsync(ct);
+
+            return allProducts.Where(p => specification.IsSatisfiedBy(p));
         }
     }
 }
