@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommerceCleanArchitectureNET.Infrastructure\CommerceCleanArchitectureNET.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\CommerceCleanArchitectureNET.Infrastructure\CommerceCleanArchitectureNET.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,21 +5,21 @@ VisualStudioVersion = 17.14.36408.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Domain", "CommerceCleanArchitectureNET.Domain\CommerceCleanArchitectureNET.Domain.csproj", "{3255C728-07F6-41E8-B75A-95A03A48A2B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Domain", "src\CommerceCleanArchitectureNET.Domain\CommerceCleanArchitectureNET.Domain.csproj", "{3255C728-07F6-41E8-B75A-95A03A48A2B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Application", "CommerceCleanArchitectureNET.Application\CommerceCleanArchitectureNET.Application.csproj", "{9CC5ED9E-C1FB-4D05-AAC2-4842A70D378D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Application", "src\CommerceCleanArchitectureNET.Application\CommerceCleanArchitectureNET.Application.csproj", "{9CC5ED9E-C1FB-4D05-AAC2-4842A70D378D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Infrastructure", "CommerceCleanArchitectureNET.Infrastructure\CommerceCleanArchitectureNET.Infrastructure.csproj", "{6D48E690-5CFF-406A-A2D0-1ADA8194863E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Infrastructure", "src\CommerceCleanArchitectureNET.Infrastructure\CommerceCleanArchitectureNET.Infrastructure.csproj", "{6D48E690-5CFF-406A-A2D0-1ADA8194863E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.WebAPI", "CommerceCleanArchitectureNET.WebAPI\CommerceCleanArchitectureNET.WebAPI.csproj", "{7216D822-078E-4B6A-BD7D-C3C2821EE794}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.WebAPI", "src\CommerceCleanArchitectureNET.WebAPI\CommerceCleanArchitectureNET.WebAPI.csproj", "{7216D822-078E-4B6A-BD7D-C3C2821EE794}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1AC231AA-FB0B-4E0B-90AA-1E07A3AE4B49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Domain.Tests", "CommerceCleanArchitectureNET.Domain.Tests\CommerceCleanArchitectureNET.Domain.Tests.csproj", "{A1CE2853-AC64-4E82-A520-F1695B567702}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Domain.Tests", "tests\CommerceCleanArchitectureNET.Domain.Tests\CommerceCleanArchitectureNET.Domain.Tests.csproj", "{A1CE2853-AC64-4E82-A520-F1695B567702}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Application.Tests", "CommerceCleanArchitectureNET.Application.Tests\CommerceCleanArchitectureNET.Application.Tests.csproj", "{85152F24-AF62-427F-AC77-FC8F17BA7351}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Application.Tests", "tests\CommerceCleanArchitectureNET.Application.Tests\CommerceCleanArchitectureNET.Application.Tests.csproj", "{85152F24-AF62-427F-AC77-FC8F17BA7351}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Infrastructure.Tests", "CommerceCleanArchitectureNET.Infrastructure.Tests\CommerceCleanArchitectureNET.Infrastructure.Tests.csproj", "{5A298152-2324-44C6-9139-D961F662CF44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceCleanArchitectureNET.Infrastructure.Tests", "tests\CommerceCleanArchitectureNET.Infrastructure.Tests\CommerceCleanArchitectureNET.Infrastructure.Tests.csproj", "{5A298152-2324-44C6-9139-D961F662CF44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

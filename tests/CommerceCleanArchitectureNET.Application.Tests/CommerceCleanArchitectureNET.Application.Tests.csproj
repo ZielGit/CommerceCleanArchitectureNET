@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommerceCleanArchitectureNET.Application\CommerceCleanArchitectureNET.Application.csproj" />
-    <ProjectReference Include="..\CommerceCleanArchitectureNET.Domain\CommerceCleanArchitectureNET.Domain.csproj" />
+    <ProjectReference Include="..\..\src\CommerceCleanArchitectureNET.Application\CommerceCleanArchitectureNET.Application.csproj" />
+    <ProjectReference Include="..\..\src\CommerceCleanArchitectureNET.Domain\CommerceCleanArchitectureNET.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
