@@ -77,7 +77,8 @@ API → Application → Domain
 |-----------|-----------|
 | **Framework** | .NET 8.0 |
 | **Lenguaje** | C# 12.0 |
-| **Base de Datos** | SQL Server |
+| **Base de Datos** | SQL Server 2022 Express |
+| **Contenedor BD** | Docker |
 | **ORM** | Entity Framework Core 8.0 |
 | **Autenticación** | JWT Bearer |
 | **Testing** | xUnit, Moq |
@@ -153,7 +154,7 @@ CommerceCleanArchitectureNET/
 Antes de comenzar, asegúrate de tener instalado:
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [SQL Server](https://www.microsoft.com/sql-server/sql-server-downloads) (Express o Developer Edition)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (para SQL Server Express en contenedor)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) o [VS Code](https://code.visualstudio.com/)
 - [Git](https://git-scm.com/)
 
@@ -161,6 +162,7 @@ Verifica las instalaciones:
 
 ```bash
 dotnet --version  # Debe ser 8.0 o superior
+docker --version  # Debe ser 20.0 o superior
 ```
 
 ## 🚀 Instalación
@@ -172,13 +174,27 @@ git clone https://github.com/ZielGit/CommerceCleanArchitectureNET.git
 cd CommerceCleanArchitectureNET
 ```
 
-### 2. Restaurar dependencias
+### 2. Levantar SQL Server con Docker
+
+```bash
+docker compose up -d
+```
+
+Esto inicia un contenedor de **SQL Server 2022 Express** en el puerto `1433`. Puedes verificar que está listo con:
+
+```bash
+docker compose logs -f sqlserver
+```
+
+Espera hasta ver el mensaje `SQL Server is now ready for client connections`.
+
+### 3. Restaurar dependencias
 
 ```bash
 dotnet restore
 ```
 
-### 3. Compilar la solución
+### 4. Compilar la solución
 
 ```bash
 dotnet build
@@ -188,29 +204,29 @@ dotnet build
 
 ### 1. Configurar la Base de Datos
 
-Edita el archivo `src/CommerceCleanArchitectureNET.WebAPI/appsettings.json`:
+Crea el archivo `src/CommerceCleanArchitectureNET.WebAPI/appsettings.Development.json` (está en `.gitignore`, no se versiona):
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=CommerceCleanArchitectureDB;Trusted_Connection=True;TrustServerCertificate=True;"
+    "DefaultConnection": "Server=localhost;Database=CommerceCleanArchitectureDB;User Id=sa;Password=TU_PASSWORD_SA;TrustServerCertificate=True;"
   },
   "JwtSettings": {
     "SecretKey": "TuClaveSecretaSuperSeguraDeAlMenos32Caracteres!",
-    "Issuer": "CommerceCleanArchAPI",
-    "Audience": "CommerceCleanArchClient",
+    "Issuer": "CommerceCleanArchitectureAPI",
+    "Audience": "CommerceCleanArchitectureClient",
     "ExpirationMinutes": 60
   }
 }
 ```
 
+> El `Password` debe coincidir con el valor de `SA_PASSWORD` definido en tu archivo `.env` local.
+
 ### 2. Aplicar Migraciones
 
-```bash
-# Crear la migración inicial
-dotnet ef migrations add InitialCreate -p src/CommerceCleanArchitectureNET.Infrastructure -s src/CommerceCleanArchitectureNET.WebAPI
+La migración inicial ya existe en el proyecto. Solo aplícala a la base de datos:
 
-# Aplicar la migración a la base de datos
+```bash
 dotnet ef database update -p src/CommerceCleanArchitectureNET.Infrastructure -s src/CommerceCleanArchitectureNET.WebAPI
 ```
 
