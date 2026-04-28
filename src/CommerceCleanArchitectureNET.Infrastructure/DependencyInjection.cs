@@ -3,6 +3,7 @@ using CommerceCleanArchitectureNET.Domain.Repositories;
 using CommerceCleanArchitectureNET.Infrastructure.Authentication;
 using CommerceCleanArchitectureNET.Infrastructure.Data;
 using CommerceCleanArchitectureNET.Infrastructure.Repositories;
+using CommerceCleanArchitectureNET.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,11 +34,17 @@ namespace CommerceCleanArchitectureNET.Infrastructure
 
             // Repositories
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            // Security
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             // JWT Authentication
             var jwtSettings = configuration.GetSection("JwtSettings");
             services.Configure<JwtSettings>(jwtSettings);
-            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<JwtTokenGenerator>();
+            services.AddSingleton<IJwtTokenGenerator>(sp => sp.GetRequiredService<JwtTokenGenerator>());
+            services.AddSingleton<ITokenGenerator>(sp => sp.GetRequiredService<JwtTokenGenerator>());
 
             var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
             services.AddAuthentication(options =>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using CommerceCleanArchitectureNET.Application.Interfaces;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CommerceCleanArchitectureNET.Infrastructure.Authentication
 {
-    public class JwtTokenGenerator : IJwtTokenGenerator
+    public class JwtTokenGenerator : IJwtTokenGenerator, ITokenGenerator
     {
         private readonly JwtSettings _settings;
 
