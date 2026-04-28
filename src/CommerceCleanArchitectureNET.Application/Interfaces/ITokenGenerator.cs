@@ -1,0 +1,7 @@
+namespace CommerceCleanArchitectureNET.Application.Interfaces
+{
+    public interface ITokenGenerator
+    {
+        string GenerateToken(string userId, string email, IEnumerable<string> roles);
+    }
+}
