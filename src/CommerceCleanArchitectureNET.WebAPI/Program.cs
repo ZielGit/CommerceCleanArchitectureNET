@@ -4,6 +4,8 @@ using CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.GetProductById;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.SearchProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.UpdateProduct;
+using CommerceCleanArchitectureNET.Application.UseCases.Users.LoginUser;
+using CommerceCleanArchitectureNET.Application.UseCases.Users.RegisterUser;
 using CommerceCleanArchitectureNET.Infrastructure;
 using CommerceCleanArchitectureNET.WebAPI.Middleware;
 using Microsoft.OpenApi.Models;
@@ -43,13 +45,17 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Application Layer
+// Application Layer - Products
 builder.Services.AddScoped<ICreateProductUseCase, CreateProductUseCase>();
 builder.Services.AddScoped<IGetProductByIdUseCase, GetProductByIdUseCase>();
 builder.Services.AddScoped<IGetAllProductsUseCase, GetAllProductsUseCase>();
 builder.Services.AddScoped<IUpdateProductUseCase, UpdateProductUseCase>();
 builder.Services.AddScoped<IDeleteProductUseCase, DeleteProductUseCase>();
 builder.Services.AddScoped<ISearchProductsUseCase, SearchProductsUseCase>();
+
+// Application Layer - Auth
+builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
+builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
 
 // Infrastructure Layer
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -67,6 +73,7 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
