@@ -20,6 +20,8 @@ Este proyecto es una plantilla educativa que demuestra las mejores prácticas de
 - [Ejecución](#-ejecución)
 - [Testing](#-testing)
 - [API Endpoints](#-api-endpoints)
+  - [Auth (público)](#auth-público)
+  - [Products (requiere JWT)](#products-requiere-jwt)
 - [Principios Aplicados](#-principios-aplicados)
 - [Patrones de Diseño](#-patrones-de-diseño)
 - [Licencia](#-licencia)
@@ -30,13 +32,15 @@ Este proyecto es una plantilla educativa que demuestra las mejores prácticas de
 - ✅ **Domain-Driven Design** - Entidades ricas, Value Objects
 - ✅ **SOLID Principles** - Código mantenible y extensible
 - ✅ **Entity Framework Core** - ORM moderno con SQL Server
-- ✅ **JWT Authentication** - Autenticación basada en tokens
+- ✅ **JWT Authentication** - Registro, login y protección de endpoints con Bearer tokens
+- ✅ **Password Hashing** - PBKDF2/SHA-256 con salt aleatorio
 - ✅ **Unit of Work Pattern** - Gestión transaccional
 - ✅ **Repository Pattern** - Abstracción de acceso a datos
 - ✅ **Result Pattern** - Manejo robusto de errores
+- ✅ **Specification Pattern** - Consultas y reglas de negocio encapsuladas
 - ✅ **Dependency Injection** - Inversión de control
 - ✅ **Unit Testing** - xUnit + Moq
-- ✅ **Swagger/OpenAPI** - Documentación automática
+- ✅ **Swagger/OpenAPI** - Documentación automática con soporte Bearer
 - ✅ **Clean Code** - Código legible y mantenible
 
 ## 🏛️ Arquitectura
@@ -92,40 +96,68 @@ CommerceCleanArchitectureNET/
 ├── src/
 │   ├── Domain/                          # Capa de Dominio
 │   │   ├── Entities/
-│   │   │   └── Product.cs              # Entidad de dominio
+│   │   │   ├── Product.cs              # Entidad de dominio: producto
+│   │   │   └── User.cs                 # Entidad de dominio: usuario
 │   │   ├── ValueObjects/
 │   │   │   └── Money.cs                # Value Object inmutable
 │   │   ├── Repositories/
-│   │   │   └── IProductRepository.cs   # Contrato del repositorio
+│   │   │   ├── IProductRepository.cs   # Contrato del repositorio de productos
+│   │   │   └── IUserRepository.cs      # Contrato del repositorio de usuarios
 │   │   ├── Specifications/             # Patrón Specification
 │   │   ├── Common/
-│   │   │   └── BaseEntity.cs           # Clase base
+│   │   │   └── BaseEntity.cs           # Clase base (Id, CreatedAt, UpdatedAt)
 │   │   └── Exceptions/
 │   │       └── DomainException.cs      # Excepciones de negocio
 │   │
 │   ├── Application/                     # Capa de Aplicación
-│   │   ├── UseCases/                   # Casos de Uso
+│   │   ├── UseCases/
+│   │   │   ├── Products/               # Casos de uso de productos
+│   │   │   │   ├── CreateProduct/
+│   │   │   │   ├── GetAllProducts/
+│   │   │   │   ├── GetProductById/
+│   │   │   │   ├── UpdateProduct/
+│   │   │   │   ├── DeleteProduct/
+│   │   │   │   └── SearchProducts/
+│   │   │   └── Users/                  # Casos de uso de autenticación
+│   │   │       ├── RegisterUser/
+│   │   │       └── LoginUser/
 │   │   ├── DTOs/                       # Data Transfer Objects
+│   │   │   ├── ProductDto.cs
+│   │   │   ├── CreateProductDto.cs
+│   │   │   ├── UpdateProductDto.cs
+│   │   │   ├── ProductSearchDto.cs
+│   │   │   ├── RegisterUserDto.cs
+│   │   │   ├── LoginUserDto.cs
+│   │   │   ├── UserDto.cs
+│   │   │   └── AuthResponseDto.cs
 │   │   ├── Interfaces/
-│   │   │   └── IUnitOfWork.cs          # Patrón Unit of Work
+│   │   │   ├── IUnitOfWork.cs          # Patrón Unit of Work
+│   │   │   ├── IPasswordHasher.cs      # Contrato de hashing
+│   │   │   └── ITokenGenerator.cs      # Contrato de generación de tokens
 │   │   └── Common/
 │   │       └── Result.cs               # Patrón Result
 │   │
 │   ├── Infrastructure/                  # Capa de Infraestructura
 │   │   ├── Data/
 │   │   │   ├── ApplicationDbContext.cs
+│   │   │   ├── Migrations/
 │   │   │   └── Configurations/
-│   │   │       └── ProductConfiguration.cs
+│   │   │       ├── ProductConfiguration.cs
+│   │   │       └── UserConfiguration.cs
 │   │   ├── Repositories/
-│   │   │   └── ProductRepository.cs    # Implementación del repositorio
+│   │   │   ├── ProductRepository.cs
+│   │   │   └── UserRepository.cs
 │   │   ├── Authentication/
 │   │   │   ├── JwtSettings.cs
-│   │   │   └── JwtTokenGenerator.cs
+│   │   │   └── JwtTokenGenerator.cs    # Genera tokens HMAC-SHA256
+│   │   ├── Security/
+│   │   │   └── PasswordHasher.cs       # PBKDF2/SHA-256 con salt
 │   │   └── DependencyInjection.cs      # Configuración de DI
 │   │
 │   └── WebAPI/                          # Capa de Presentación
 │       ├── Controllers/
-│       │   └── ProductsController.cs   # API REST
+│       │   ├── ProductsController.cs   # Endpoints de productos (requiere JWT)
+│       │   └── AuthController.cs       # Endpoints de autenticación (públicos)
 │       ├── Middleware/
 │       │   └── ErrorHandlingMiddleware.cs
 │       ├── Models/
@@ -284,16 +316,52 @@ dotnet test --filter "FullyQualifiedName~ProductTests"
 
 ## 📡 API Endpoints
 
-### Products
+### Auth (público)
+
+| Método | Endpoint | Descripción | Body |
+|--------|----------|-------------|------|
+| `POST` | `/api/auth/register` | Registrar nuevo usuario | `{ email, password, firstName, lastName }` |
+| `POST` | `/api/auth/login` | Iniciar sesión y obtener token JWT | `{ email, password }` |
+
+### Products (requiere JWT)
+
+> Todos los endpoints de productos requieren el header `Authorization: Bearer <token>`.
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | `POST` | `/api/products` | Crear producto |
-| `GET` | `/api/products/{id}` | Obtener producto por ID |
 | `GET` | `/api/products` | Listar todos los productos |
-| `GET` | `/api/products/search` | Buscar productos con filtros (Specification Pattern) |
-| `PUT` | `/api/products/{id}` | Actualizar stock del producto |
+| `GET` | `/api/products/{id}` | Obtener producto por ID |
+| `PUT` | `/api/products/{id}` | Actualizar producto |
 | `DELETE` | `/api/products/{id}` | Eliminar producto |
+| `GET` | `/api/products/search` | Buscar con filtros (Specification Pattern) |
+
+**Parámetros de búsqueda (`/api/products/search`):**
+
+| Query param | Tipo | Descripción |
+|-------------|------|-------------|
+| `name` | `string` | Filtrar por nombre (parcial) |
+| `minPrice` | `decimal` | Precio mínimo |
+| `maxPrice` | `decimal` | Precio máximo |
+| `onlyInStock` | `bool` | Solo productos con stock > 0 |
+| `onlyActive` | `bool` | Solo productos activos |
+
+### Usar la API con JWT
+
+**1. Obtener el token:**
+```bash
+curl -X POST https://localhost:5001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"MiPassword123!"}'
+```
+
+**2. Usar el token en requests protegidos:**
+```bash
+curl https://localhost:5001/api/products \
+  -H "Authorization: Bearer eyJhbGci..."
+```
+
+**En Swagger:** haz clic en el botón **Authorize** (🔒), pega el token y confirma. Todos los requests siguientes lo incluirán automáticamente.
 
 ## 🎯 Principios Aplicados
 
@@ -354,6 +422,7 @@ Dependencia de abstracciones, no de concreciones:
 | **Result** | `Application/Common` | Manejo de errores funcional |
 | **Factory** | `Domain/Entities` | Creación de objetos complejos |
 | **Specification** | `Domain/Specifications` | Encapsula lógica de consultas y reglas de negocio |
+| **Strategy** | `Infrastructure/Security` | Algoritmo de hashing intercambiable (PBKDF2) |
 
 ### Patrón Specification en Detalle
 
