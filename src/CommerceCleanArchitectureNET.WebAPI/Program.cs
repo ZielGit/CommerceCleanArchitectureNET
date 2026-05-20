@@ -4,7 +4,9 @@ using CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.GetProductById;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.SearchProducts;
 using CommerceCleanArchitectureNET.Application.UseCases.Products.UpdateProduct;
+using CommerceCleanArchitectureNET.Application.UseCases.Users.GetCurrentUser;
 using CommerceCleanArchitectureNET.Application.UseCases.Users.LoginUser;
+using CommerceCleanArchitectureNET.Application.UseCases.Users.LogoutUser;
 using CommerceCleanArchitectureNET.Application.UseCases.Users.RegisterUser;
 using CommerceCleanArchitectureNET.Infrastructure;
 using CommerceCleanArchitectureNET.WebAPI.Middleware;
@@ -56,6 +58,8 @@ builder.Services.AddScoped<ISearchProductsUseCase, SearchProductsUseCase>();
 // Application Layer - Auth
 builder.Services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
 builder.Services.AddScoped<ILoginUserUseCase, LoginUserUseCase>();
+builder.Services.AddScoped<IGetCurrentUserUseCase, GetCurrentUserUseCase>();
+builder.Services.AddScoped<ILogoutUserUseCase, LogoutUserUseCase>();
 
 // Infrastructure Layer
 builder.Services.AddInfrastructure(builder.Configuration);
