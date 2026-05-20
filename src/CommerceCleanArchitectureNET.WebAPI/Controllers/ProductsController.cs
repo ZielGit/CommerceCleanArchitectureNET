@@ -40,14 +40,17 @@ namespace CommerceCleanArchitectureNET.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Get all products
+        /// Get all products (paginated)
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ProductDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedProductsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetAllProducts(CancellationToken ct)
+        public async Task<IActionResult> GetAllProducts(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            CancellationToken ct = default)
         {
-            var result = await _getAllProducts.ExecuteAsync(ct);
+            var result = await _getAllProducts.ExecuteAsync(page, pageSize, ct);
 
             if (!result.IsSuccess)
                 return BadRequest(new ErrorResponse(result.Error!));

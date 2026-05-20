@@ -61,6 +61,25 @@ namespace CommerceCleanArchitectureNET.Infrastructure.Repositories
             return await _context.Products.AnyAsync(p => p.Id == id, ct);
         }
 
+        public async Task<(IEnumerable<Product> Items, int Total)> GetPagedAsync(
+            int page,
+            int pageSize,
+            CancellationToken ct = default)
+        {
+            var query = _context.Products
+                .AsNoTracking()
+                .Where(p => p.IsActive);
+
+            var total = await query.CountAsync(ct);
+            var items = await query
+                .OrderBy(p => p.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(ct);
+
+            return (items, total);
+        }
+
         public async Task<IEnumerable<Product>> FindAsync(
             ISpecification<Product> specification,
             CancellationToken ct = default)

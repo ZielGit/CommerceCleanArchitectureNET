@@ -17,6 +17,11 @@ namespace CommerceCleanArchitectureNET.Domain.Repositories
         Task DeleteAsync(Guid id, CancellationToken ct = default);
         Task<bool> ExistsAsync(Guid id, CancellationToken ct = default);
 
+        Task<(IEnumerable<Product> Items, int Total)> GetPagedAsync(
+            int page,
+            int pageSize,
+            CancellationToken ct = default);
+
         /// <summary>
         /// Obtiene productos que satisfacen una especificación
         /// </summary>

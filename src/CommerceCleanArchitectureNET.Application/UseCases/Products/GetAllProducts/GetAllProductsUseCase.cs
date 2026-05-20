@@ -1,11 +1,6 @@
 ﻿using CommerceCleanArchitectureNET.Application.Common;
 using CommerceCleanArchitectureNET.Application.DTOs;
 using CommerceCleanArchitectureNET.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProducts
 {
@@ -18,13 +13,17 @@ namespace CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProdu
             _repository = repository;
         }
 
-        public async Task<Result<IEnumerable<ProductDto>>> ExecuteAsync(CancellationToken ct = default)
+        public async Task<Result<PagedProductsDto>> ExecuteAsync(int page, int pageSize, CancellationToken ct = default)
         {
             try
             {
-                var products = await _repository.GetAllAsync(ct);
+                if (page < 1) page = 1;
+                if (pageSize < 1) pageSize = 10;
+                if (pageSize > 100) pageSize = 100;
 
-                var productDtos = products.Select(p => new ProductDto(
+                var (items, total) = await _repository.GetPagedAsync(page, pageSize, ct);
+
+                var products = items.Select(p => new ProductDto(
                     p.Id,
                     p.Name,
                     p.Price.Amount,
@@ -33,11 +32,13 @@ namespace CommerceCleanArchitectureNET.Application.UseCases.Products.GetAllProdu
                     p.IsActive
                 ));
 
-                return Result<IEnumerable<ProductDto>>.Success(productDtos);
+                var totalPages = (int)Math.Ceiling(total / (double)pageSize);
+
+                return Result<PagedProductsDto>.Success(new PagedProductsDto(products, total, page, pageSize, totalPages));
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<ProductDto>>.Failure($"Error retrieving products: {ex.Message}");
+                return Result<PagedProductsDto>.Failure($"Error retrieving products: {ex.Message}");
             }
         }
     }
