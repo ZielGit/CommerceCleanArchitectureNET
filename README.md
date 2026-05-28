@@ -20,8 +20,9 @@ Este proyecto es una plantilla educativa que demuestra las mejores prácticas de
 - [Ejecución](#-ejecución)
 - [Testing](#-testing)
 - [API Endpoints](#-api-endpoints)
-  - [Auth (público)](#auth-público)
-  - [Products (requiere JWT)](#products-requiere-jwt)
+  - [Auth — Público](#auth--público)
+  - [Auth — Requiere JWT](#auth--requiere-jwt)
+  - [Products — Requiere JWT](#products--requiere-jwt)
 - [Principios Aplicados](#-principios-aplicados)
 - [Patrones de Diseño](#-patrones-de-diseño)
 - [Licencia](#-licencia)
@@ -120,7 +121,9 @@ CommerceCleanArchitectureNET/
 │   │   │   │   └── SearchProducts/
 │   │   │   └── Users/                  # Casos de uso de autenticación
 │   │   │       ├── RegisterUser/
-│   │   │       └── LoginUser/
+│   │   │       ├── LoginUser/
+│   │   │       ├── GetCurrentUser/
+│   │   │       └── LogoutUser/
 │   │   ├── DTOs/                       # Data Transfer Objects
 │   │   │   ├── ProductDto.cs
 │   │   │   ├── CreateProductDto.cs
@@ -157,7 +160,7 @@ CommerceCleanArchitectureNET/
 │   └── WebAPI/                          # Capa de Presentación
 │       ├── Controllers/
 │       │   ├── ProductsController.cs   # Endpoints de productos (requiere JWT)
-│       │   └── AuthController.cs       # Endpoints de autenticación (públicos)
+│       │   └── AuthController.cs       # Endpoints de autenticación (público y protegido)
 │       ├── Middleware/
 │       │   └── ErrorHandlingMiddleware.cs
 │       ├── Models/
@@ -316,14 +319,25 @@ dotnet test --filter "FullyQualifiedName~ProductTests"
 
 ## 📡 API Endpoints
 
-### Auth (público)
+### Auth — Público
 
 | Método | Endpoint | Descripción | Body |
 |--------|----------|-------------|------|
 | `POST` | `/api/auth/register` | Registrar nuevo usuario | `{ email, password, firstName, lastName }` |
 | `POST` | `/api/auth/login` | Iniciar sesión y obtener token JWT | `{ email, password }` |
 
-### Products (requiere JWT)
+### Auth — Requiere JWT
+
+> Estos endpoints requieren el header `Authorization: Bearer <token>`.
+
+| Método | Endpoint | Descripción | Respuesta |
+|--------|----------|-------------|-----------|
+| `GET` | `/api/auth/me` | Obtener perfil del usuario autenticado | `UserDto` |
+| `POST` | `/api/auth/logout` | Cerrar sesión (invalida el token en el cliente) | `204 No Content` |
+
+> **Nota sobre logout:** La API usa JWT sin estado. El servidor confirma la identidad del usuario y responde `204`; la responsabilidad de descartar el token recae en el cliente.
+
+### Products — Requiere JWT
 
 > Todos los endpoints de productos requieren el header `Authorization: Bearer <token>`.
 
@@ -348,14 +362,33 @@ dotnet test --filter "FullyQualifiedName~ProductTests"
 
 ### Usar la API con JWT
 
-**1. Obtener el token:**
+**1. Registrar un usuario:**
+```bash
+curl -X POST https://localhost:5001/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"MiPassword123!","firstName":"Frans","lastName":"Vilcahuaman"}'
+```
+
+**2. Obtener el token:**
 ```bash
 curl -X POST https://localhost:5001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"MiPassword123!"}'
 ```
 
-**2. Usar el token en requests protegidos:**
+**3. Consultar el perfil autenticado:**
+```bash
+curl https://localhost:5001/api/auth/me \
+  -H "Authorization: Bearer eyJhbGci..."
+```
+
+**4. Cerrar sesión:**
+```bash
+curl -X POST https://localhost:5001/api/auth/logout \
+  -H "Authorization: Bearer eyJhbGci..."
+```
+
+**5. Usar el token en endpoints de productos:**
 ```bash
 curl https://localhost:5001/api/products \
   -H "Authorization: Bearer eyJhbGci..."
