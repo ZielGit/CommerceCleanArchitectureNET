@@ -70,7 +70,7 @@ namespace CommerceCleanArchitectureNET.Application.Tests.UseCases.Products
             // Assert
             Assert.False(result.IsSuccess);
             Assert.NotNull(result.Error);
-            Assert.Contains("price", result.Error.ToLower());
+            Assert.Contains("negative", result.Error.ToLower());
 
             _mockRepository.Verify(
                 r => r.AddAsync(It.IsAny<Product>(), It.IsAny<CancellationToken>()),
