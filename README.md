@@ -34,6 +34,7 @@ Este proyecto es una plantilla educativa que demuestra las mejores prácticas de
 - ✅ **SOLID Principles** - Código mantenible y extensible
 - ✅ **Entity Framework Core** - ORM moderno con SQL Server
 - ✅ **JWT Authentication** - Registro, login y protección de endpoints con Bearer tokens
+- ✅ **Paginación** - Listado de productos paginado (`page`/`pageSize`) con metadatos de total y páginas
 - ✅ **Password Hashing** - PBKDF2/SHA-256 con salt aleatorio
 - ✅ **Unit of Work Pattern** - Gestión transaccional
 - ✅ **Repository Pattern** - Abstracción de acceso a datos
@@ -126,6 +127,7 @@ CommerceCleanArchitectureNET/
 │   │   │       └── LogoutUser/
 │   │   ├── DTOs/                       # Data Transfer Objects
 │   │   │   ├── ProductDto.cs
+│   │   │   ├── PagedProductsDto.cs
 │   │   │   ├── CreateProductDto.cs
 │   │   │   ├── UpdateProductDto.cs
 │   │   │   ├── ProductSearchDto.cs
@@ -344,11 +346,30 @@ dotnet test --filter "FullyQualifiedName~ProductTests"
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | `POST` | `/api/products` | Crear producto |
-| `GET` | `/api/products` | Listar todos los productos |
+| `GET` | `/api/products` | Listar productos (paginado) |
 | `GET` | `/api/products/{id}` | Obtener producto por ID |
 | `PUT` | `/api/products/{id}` | Actualizar producto |
 | `DELETE` | `/api/products/{id}` | Eliminar producto |
 | `GET` | `/api/products/search` | Buscar con filtros (Specification Pattern) |
+
+**Parámetros de paginación (`GET /api/products`):**
+
+| Query param | Tipo | Default | Descripción |
+|-------------|------|---------|-------------|
+| `page` | `int` | `1` | Número de página (mínimo 1) |
+| `pageSize` | `int` | `10` | Tamaño de página (máximo 100) |
+
+Solo devuelve productos activos (`IsActive = true`), ordenados por nombre. Respuesta (`PagedProductsDto`):
+
+```json
+{
+  "data": [ { "id": "...", "name": "...", "price": 0, "stock": 0, "isActive": true } ],
+  "total": 42,
+  "page": 1,
+  "pageSize": 10,
+  "totalPages": 5
+}
+```
 
 **Parámetros de búsqueda (`/api/products/search`):**
 
@@ -391,6 +412,12 @@ curl -X POST https://localhost:5001/api/auth/logout \
 **5. Usar el token en endpoints de productos:**
 ```bash
 curl https://localhost:5001/api/products \
+  -H "Authorization: Bearer eyJhbGci..."
+```
+
+**6. Listar productos con paginación:**
+```bash
+curl "https://localhost:5001/api/products?page=2&pageSize=20" \
   -H "Authorization: Bearer eyJhbGci..."
 ```
 
