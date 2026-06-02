@@ -297,8 +297,23 @@ dotnet test
 ### Ejecutar tests con cobertura
 
 ```bash
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+dotnet test --collect:"XPlat Code Coverage"
 ```
+
+Genera `coverage.cobertura.xml` en cada proyecto de test.
+
+#### Visualizar reporte HTML
+
+```bash
+# Recoger todos los XML y generar reporte
+reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:Html
+
+# Abrir en el navegador
+start coverage-report/index.html
+```
+
+> Requiere ReportGenerator instalado globalmente:
+> `dotnet tool install --global dotnet-reportgenerator-globaltool`
 
 ### Ejecutar tests de una capa específica
 
